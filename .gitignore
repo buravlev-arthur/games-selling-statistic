@@ -12,6 +12,7 @@ node_modules
 # Logs
 logs
 *.log
+.stylelintcache
 
 # Misc
 .DS_Store

@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <p>Текст</p>
-  </div>
+  <NuxtPage />
 </template>
 
 <style lang="scss">

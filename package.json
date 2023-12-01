@@ -1,0 +1,28 @@
+{
+  "name": "nuxt-app",
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@nuxtjs/eslint-module": "^4.1.0",
+    "@nuxtjs/google-fonts": "^3.1.0",
+    "@nuxtjs/stylelint-module": "^5.1.0",
+    "eslint": "^8.54.0",
+    "nuxt": "^3.8.2",
+    "sass": "^1.69.5",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "stylelint-config-standard-vue": "^1.0.0",
+    "vue": "^3.3.8",
+    "vue-router": "^4.2.5"
+  },
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "lint": "eslint .",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "type": "module"
+}

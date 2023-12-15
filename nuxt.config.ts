@@ -12,6 +12,14 @@ export default defineNuxtConfig({
     }
   },
 
+  runtimeConfig: {
+    dbHost: '',
+    dbPort: '',
+    dbUser: '',
+    dbPassword: '',
+    dbName: ''
+  },
+
   routeRules: {
     '/': { ssr: false }
   },

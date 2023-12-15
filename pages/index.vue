@@ -14,6 +14,14 @@ import { LineChart } from 'echarts/charts'
 import type { LineSeriesOption } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
+import type { GameDataInsertInstances } from '~/types'
+
+// test request
+const { data } = await useFetch<GameDataInsertInstances>(
+  '/api/gamesdata/dateinterval?from=12/13/2023&until=12/15/2023'
+)
+
+console.log(data.value?.[0])
 
 type Option = ComposeOption<GridComponentOption | LineSeriesOption>
 

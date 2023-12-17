@@ -10,3 +10,8 @@ export interface DateIntervalQueryParams {
   from: string
   until: string
 }
+
+export interface AvailableDatesResponse {
+  min: Date
+  max: Date
+}

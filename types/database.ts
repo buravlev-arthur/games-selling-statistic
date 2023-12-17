@@ -47,6 +47,9 @@ export interface GameData extends GameDataInsertInstance {
   id: number
 }
 
+export type MinDate = Array<{ 'min(`parsed_date`)': string }>
+export type MaxDate = Array<{ 'max(`parsed_date`)': string }>
+
 export type Platforms = Array<Platform>
 export type Publishers = Array<Publisher>
 export type Shops = Array<Shop>

@@ -1,6 +1,6 @@
-import type { GameDataInsertInstances, DateIntervalQueryParams } from '~/types'
+import type { GameData, GamesData, DateIntervalQueryParams } from '~/types'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<GamesData> => {
   const { from, until } = getQuery<DateIntervalQueryParams>(event)
   const { database, closeConnection } = useMysql(event)
 
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const rows = await database<GameDataInsertInstances>('games_data')
+  const rows = await database<GameData>('games_data')
     .orderBy('parsed_date')
     .whereBetween('parsed_date', [new Date(from), new Date(until)])
   await closeConnection()

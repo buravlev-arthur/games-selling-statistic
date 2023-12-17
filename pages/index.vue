@@ -14,14 +14,17 @@ import { LineChart } from 'echarts/charts'
 import type { LineSeriesOption } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
-import type { GameDataInsertInstances } from '~/types'
+import type { GamesData, AvailableDatesResponse } from '~/types'
 
 // test request
-const { data } = await useFetch<GameDataInsertInstances>(
-  '/api/gamesdata/dateinterval?from=12/13/2023&until=12/15/2023'
+const { data: rows } = await useFetch<GamesData>(
+  '/api/gamesdata/dateinterval?from=12/13/2024&until=12/15/2024'
 )
 
-console.log(data.value?.[0])
+const { data: dates } = await useFetch<AvailableDatesResponse>('/api/gamesdata/availabledates')
+
+console.log('min, max dates: ', dates.value)
+console.log(rows.value)
 
 type Option = ComposeOption<GridComponentOption | LineSeriesOption>
 

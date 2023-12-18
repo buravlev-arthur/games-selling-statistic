@@ -1,52 +1,139 @@
 <template>
-  <VChart class="chart" :option="option" autoresize theme="dark" />
+  <div class="row">
+    <div class="col-12 col-md-4">
+      <VChart class="chart" :option="optionsMax" autoresize theme="dark" />
+    </div>
+    <div class="col-12 col-md-4">
+      <VChart class="chart" :option="optionsMin" autoresize theme="dark" />
+    </div>
+    <div class="col-12 col-md-4">
+      <VChart class="chart" :option="optionsAvg" autoresize theme="dark" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { getCssVar } from 'quasar'
-import { ref } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import type { ComposeOption } from 'echarts/core'
-import { GridComponent } from 'echarts/components'
-import type { GridComponentOption } from 'echarts/components'
+import { GridComponent, TitleComponent } from 'echarts/components'
+import type { GridComponentOption, TitleComponentOption } from 'echarts/components'
 import { LineChart } from 'echarts/charts'
 import type { LineSeriesOption } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
-import type { GamesData, AvailableDatesResponse } from '~/types'
+import type { GamesData } from '~/types'
 
-// test request
-const { data: rows } = await useFetch<GamesData>(
-  '/api/gamesdata/dateinterval?from=12/13/2023&until=12/15/2023'
-)
+const gamesByWeek = useState<GamesData>('gamesDataByWeek')
+// const gamesByLastDay = useState('gamesDataByLastDay')
+// const gamesByMonth = useState('gamesDataByMonth')
 
-const { data: dates } = await useFetch<AvailableDatesResponse>('/api/gamesdata/availabledates')
+type Option = ComposeOption<GridComponentOption | LineSeriesOption | TitleComponentOption>
 
-console.log('min, max dates: ', dates.value)
-console.log(rows.value)
+use([GridComponent, LineChart, SVGRenderer, UniversalTransition, TitleComponent])
 
-type Option = ComposeOption<GridComponentOption | LineSeriesOption>
+const maxCosts = computed<Array<Array<string | number>>>(() => Object
+  .entries(gamesByWeek.value?.reduce((acc: Record<string, number>, gameData) => {
+    const date = new Date(gameData.parsed_date).toLocaleDateString('ru')
+    const maxCost = gameData.price_max
+    if ((acc[date] && acc[date] < maxCost) || !acc[date]) {
+      acc[date] = maxCost
+      return acc
+    }
+    return acc
+  }, {}) ?? {}))
 
-use([GridComponent, LineChart, SVGRenderer, UniversalTransition])
+const minCosts = computed<Array<Array<string | number>>>(() => Object
+  .entries(gamesByWeek.value?.reduce((acc: Record<string, number>, gameData) => {
+    const date = new Date(gameData.parsed_date).toLocaleDateString('ru')
+    const minCost = gameData.price_min
+    if ((acc[date] && acc[date] > minCost) || !acc[date]) {
+      acc[date] = minCost
+      return acc
+    }
+    return acc
+  }, {}) ?? {}))
 
-const option = ref<Option>({
+const avgCosts = computed<Array<Array<string | number>>>(() => {
+  return maxCosts.value
+    .map(([date, cost], index) => [date, ((minCosts.value[index][1] as number) + (cost as number)) / 2])
+})
+
+const optionsMax = computed<Option>(() => ({
+  title: {
+    text: 'Максимальная стоимость игр'
+  },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    boundaryGap: false
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    boundaryGap: [0, 0],
+    min: 'dataMin',
+    max: 'dataMax'
   },
   series: [
     {
-      data: [150, 230, 224, 218, 135, 147, 260],
+      data: maxCosts.value,
       type: 'line',
-      smooth: true
+      smooth: true,
+      color: 'red'
     }
   ],
   backgroundColor: getCssVar('dark-page')
-})
+}))
+
+const optionsMin = computed<Option>(() => ({
+  title: {
+    text: 'Минимальная стоимость игр'
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false
+  },
+  yAxis: {
+    type: 'value',
+    boundaryGap: [0, 0],
+    min: 'dataMin',
+    max: 'dataMax'
+  },
+  series: [
+    {
+      data: minCosts.value,
+      type: 'line',
+      smooth: true,
+      color: 'green'
+    }
+  ],
+  backgroundColor: getCssVar('dark-page')
+}))
+
+const optionsAvg = computed<Option>(() => ({
+  title: {
+    text: 'Средняя стоимость игр'
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false
+  },
+  yAxis: {
+    type: 'value',
+    boundaryGap: [0, 0],
+    min: 'dataMin',
+    max: 'dataMax'
+  },
+  series: [
+    {
+      data: avgCosts.value,
+      type: 'line',
+      smooth: true,
+      color: 'orange'
+    }
+  ],
+  backgroundColor: getCssVar('dark-page')
+}))
 </script>
 
 <style lang="scss">

@@ -12,10 +12,15 @@
     <QPageContainer>
       <QPage padding>
         <slot />
+        <QInnerLoading :showing="!isStatesLoaded" />
       </QPage>
     </QPageContainer>
   </QLayout>
 </template>
+
+<script lang="ts" setup>
+const isStatesLoaded = useState<boolean>('isStatesLoaded')
+</script>
 
 <style lang="scss">
 .q-header {

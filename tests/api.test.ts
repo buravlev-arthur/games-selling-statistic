@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { setup, fetch } from '@nuxt/test-utils'
 import type { Publishers } from '~/types'
 
-describe('API Testing', async () => {
+describe('API testing', async () => {
   await setup({
     rootDir: fileURLToPath(new URL('..', import.meta.url))
   })

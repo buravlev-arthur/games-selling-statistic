@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, test } from 'vitest'
 import { setup, fetch } from '@nuxt/test-utils'
+import type { Publishers } from '~/types'
 
 describe('API Testing', async () => {
   await setup({
@@ -17,7 +18,7 @@ describe('API Testing', async () => {
     expect(new Date(jsonData.max)).toBeTruthy()
   })
 
-  test('Getting data by date interval', async () => {
+  test('Getting game data by date interval', async () => {
     const getRequestUrl = (dates: { from: string; until: string }): string => {
       return `/api/gamesdata/dateinterval?from=${dates.from}&until=${dates.until}`
     }
@@ -53,5 +54,66 @@ describe('API Testing', async () => {
     expect(new Date(existData[existData.length - 1].parsed_date)).toEqual(
       new Date(existDates.until)
     )
+  })
+
+  test('Getting game data by id', async () => {
+    const existId = 450
+    const nonExistId = 1
+    const existResponse = await fetch(`/api/gamesdata/byid?id=${existId}`)
+    const nonExistResponse = await fetch(`/api/gamesdata/byid?id=${nonExistId}`)
+    const existGameData = await existResponse.json()
+    expect(existGameData.id).toEqual(existId)
+    expect(nonExistResponse.status).toEqual(404)
+  })
+
+  test('Getting game names', async () => {
+    const response = await fetch('/api/gamenames')
+    const gameNames = await response.json()
+    expect(Array.isArray(gameNames)).toBeTruthy()
+    expect(gameNames.length).not.toEqual(0)
+    expect(gameNames[0].name).toBeTypeOf('string')
+    expect(gameNames[0].name.length).not.toEqual(0)
+    expect(gameNames[0].alias_3).toBeDefined()
+  })
+
+  test('Getting editions', async () => {
+    const response = await fetch('/api/editions')
+    const editions = await response.json()
+    expect(Array.isArray(editions)).toBeTruthy()
+    expect(editions.length).not.toEqual(0)
+    expect(editions[0].name).toBeTypeOf('string')
+    expect(editions[0].name.length).not.toEqual(0)
+    expect(editions[0].name_rus).toBeDefined()
+  })
+
+  test('Getting platforms', async () => {
+    const response = await fetch('/api/platforms')
+    const platforms = await response.json()
+    expect(Array.isArray(platforms)).toBeTruthy()
+    expect(platforms.length).not.toEqual(0)
+    expect(platforms[0].name).toBeTypeOf('string')
+    expect(platforms[0].name.length).not.toEqual(0)
+    expect(platforms[0].manufactorer).toBeDefined()
+  })
+
+  test('Getting publishers', async () => {
+    const response = await fetch('/api/publishers')
+    const publishers: Publishers = await response.json()
+    const index = publishers.findIndex(({ name }) => name === 'Rockstar Games')
+    expect(Array.isArray(publishers)).toBeTruthy()
+    expect(publishers.length).not.toEqual(0)
+    expect(publishers[0].name).toBeTypeOf('string')
+    expect(publishers[0].name.length).not.toEqual(0)
+    expect(index).not.toEqual(-1)
+  })
+
+  test('Getting shops', async () => {
+    const response = await fetch('/api/shops')
+    const shops = await response.json()
+    expect(Array.isArray(shops)).toBeTruthy()
+    expect(shops.length).not.toEqual(0)
+    expect(shops[0].name).toBeTypeOf('string')
+    expect(shops[0].name.length).not.toEqual(0)
+    expect(shops[0].url).toBeDefined()
   })
 })

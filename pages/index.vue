@@ -18,7 +18,7 @@ import type { GamesData, AvailableDatesResponse } from '~/types'
 
 // test request
 const { data: rows } = await useFetch<GamesData>(
-  '/api/gamesdata/dateinterval?from=12/13/2024&until=12/15/2024'
+  '/api/gamesdata/dateinterval?from=12/13/2023&until=12/15/2023'
 )
 
 const { data: dates } = await useFetch<AvailableDatesResponse>('/api/gamesdata/availabledates')

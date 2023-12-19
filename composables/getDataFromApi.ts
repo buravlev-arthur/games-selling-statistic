@@ -1,56 +1,90 @@
+import { ref } from 'vue'
 import type { Ref } from 'vue'
-import type { GamesData } from '~/types'
+import type {
+  GamesData,
+  Games,
+  Editions,
+  Platforms,
+  DatabaseEntries,
+  PeriodProperty,
+  GamesDataWithValues
+} from '~/types'
+import { periods } from '~/const'
 
-export const useGamesDataByWeek = async (): Promise<Ref<GamesData | null>> => {
-  const until = new Date().toLocaleDateString('en')
-  const from = new Date(
-    new Date().setDate(new Date(until).getDate() - 7)
-  ).toLocaleDateString('en')
-  const url = `/api/gamesdata/dateinterval?from=${from}&until=${until}`
-  const { data } = await useFetch<GamesData>(url)
-  return data
-}
-
-export const useGamesDataByLastDay = async (): Promise<
-  Ref<GamesData | null>
-> => {
+export const useGamesDataByPeriod = async (
+  period: PeriodProperty
+): Promise<Ref<GamesData | null>> => {
+  const daysBefore = periods[period]
   const { data: availableDates } = await useFetch(
     '/api/gamesdata/availabledates'
   )
-  const dateStr = new Date(
+  const until = new Date(
     availableDates.value?.max as string
   ).toLocaleDateString('en')
-  const url = `/api/gamesdata/dateinterval?from=${dateStr}&until=${dateStr}`
-  const { data: gamesData } = await useFetch<GamesData>(url)
-  useState<GamesData | null>('gamesDataByLastDay', () => gamesData.value)
-  return gamesData
-}
-
-export const useGamesDataByMonth = async (): Promise<Ref<GamesData | null>> => {
-  const until = new Date().toLocaleDateString('en')
   const from = new Date(
-    new Date().setDate(new Date(until).getDate() - 30)
+    new Date().setDate(new Date(until).getDate() - daysBefore)
   ).toLocaleDateString('en')
   const url = `/api/gamesdata/dateinterval?from=${from}&until=${until}`
   const { data } = await useFetch<GamesData>(url)
-  useState<GamesData | null>('gamesDataByMonth', () => data.value)
   return data
 }
 
-export const useSetStates = async (): Promise<void> => {
-  const isStatesLoaded = useState<boolean>('isStatesLoaded', () => false)
+export const useDatabaseEntries = async (): Promise<DatabaseEntries> => {
+  const { data: games } = await useFetch<Games>('/api/gamenames')
+  const { data: platforms } = await useFetch<Platforms>('/api/platforms')
+  const { data: publishers } = await useFetch<Platforms>('/api/publishers')
+  const { data: editions } = await useFetch<Editions>('/api/editions')
 
-  const gameDataByWeek = await useGamesDataByWeek()
-  useState<GamesData | null>('gamesDataByWeek', () => gameDataByWeek.value)
+  const entries: DatabaseEntries = reactive({
+    games,
+    platforms,
+    editions,
+    publishers
+  })
 
-  const gamesDataByLastDay = await useGamesDataByLastDay()
-  useState<GamesData | null>(
-    'gamesDataByLastDay',
-    () => gamesDataByLastDay.value
-  )
+  return entries
+}
 
-  const gamesDataByMonth = await useGamesDataByMonth()
-  useState<GamesData | null>('gamesDataByMonth', () => gamesDataByMonth.value)
+export const useGamesDataValues = (
+  gamesData: GamesData | null
+): Ref<GamesDataWithValues> => {
+  const gamesDataWithValue = ref<GamesDataWithValues>([])
+  const { games, platforms, editions, publishers } =
+    useState<DatabaseEntries>('databaseEntries').value
+
+  if (gamesData?.length) {
+    gamesDataWithValue.value = gamesData.map((game) => ({
+      id: game.id,
+      name: getNameItemById(game.name, games),
+      edition: getNameItemById(game.edition, editions),
+      platform: getNameItemById(game.platform, platforms),
+      publisher: getPublisherByGameId(game.name, publishers, games),
+      priceMin: game.price_min,
+      priceAvg: game.price_avg,
+      priceMax: game.price_max,
+      offersCount: game.offers_count,
+      date: new Date(game.parsed_date),
+      dateLocalString: new Date(game.parsed_date).toLocaleDateString('ru')
+    }))
+  }
+
+  return gamesDataWithValue
+}
+
+export const useSetStates = async (period: PeriodProperty): Promise<void> => {
+  const isStatesLoaded = useState<boolean>('isStatesLoaded')
+  isStatesLoaded.value = false
+
+  const databaseEntires = useState<DatabaseEntries>('databaseEntries')
+  if (!databaseEntires.value) {
+    const entries = await useDatabaseEntries()
+    databaseEntires.value = entries
+  }
+
+  const gamesDataByPeriod = await useGamesDataByPeriod(period)
+  const gamesDataWithValues = useGamesDataValues(gamesDataByPeriod.value)
+  const gamesData = useState<GamesDataWithValues>('gamesData')
+  gamesData.value = gamesDataWithValues.value
 
   isStatesLoaded.value = true
 }

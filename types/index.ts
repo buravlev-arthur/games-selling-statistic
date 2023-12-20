@@ -1,3 +1,4 @@
+import type { Ref } from 'vue'
 import type {
   Edition,
   Editions,
@@ -45,3 +46,8 @@ export interface GameDataWithValues {
 }
 
 export type GamesDataWithValues = Array<GameDataWithValues>
+
+export interface UseScreenReturn {
+  isMobile: Ref<boolean>
+  isDesktop: Ref<boolean>
+}

@@ -61,7 +61,7 @@ export default defineNuxtConfig({
     config: {
       dark: true,
       brand: {
-        primary: '#1B4242',
+        primary: '#A1C6C9',
         secondary: '#5C8374',
         accent: '#9EC8B9',
         dark: '#143445',
@@ -69,7 +69,7 @@ export default defineNuxtConfig({
         'dark-page': '#092635',
         positive: '#347A58',
         negative: '#7A3434',
-        info: '#34767A',
+        info: '#1B4242',
         warning: '#7A5E34'
       }
     },

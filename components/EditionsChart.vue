@@ -1,30 +1,37 @@
 <template>
   <ClientOnly>
-    <div class="column col-12 col-md-8">
-      <div class="col-4 col-md-2 row justify-between">
-        <div class="col-12 col-md-3">
-          <QSelect
-            v-model="selectedPlatform"
-            rounded
-            standout
-            :options="platformOptions"
-            options-selected-class="active-select-option"
-            label="Платформа"
-          />
+    <div class="column" style="height: 100%">
+      <div class="col-4 col-md-2 row justify-between items-center">
+        <div class="col-12 col-md-6">
+          <h6>Стоимость изданий</h6>
         </div>
-        <div class="col-12 col-md-3">
-          <QSelect
-            v-model="selectedPrice"
-            rounded
-            standout
-            :options="priceOptions"
-            options-selected-class="active-select-option"
-            label="Цена"
-          />
+        <div class="row col-12 col-md-6 q-col-gutter-sm">
+          <div class="col-12 col-md-6">
+            <QSelect
+              v-model="selectedPlatform"
+              rounded
+              dense
+              standout
+              :options="platformOptions"
+              options-selected-class="active-select-option"
+              label="Платформа"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <QSelect
+              v-model="selectedPrice"
+              rounded
+              dense
+              standout
+              :options="priceOptions"
+              options-selected-class="active-select-option"
+              label="Цена"
+            />
+          </div>
         </div>
       </div>
       <div class="col-8 col-md-10">
-        <VChart :option="options" autoresize />
+        <VChart :option="option" autoresize />
       </div>
     </div>
   </ClientOnly>
@@ -51,8 +58,11 @@ import type {
   LegendComponentOption
 } from 'echarts/components'
 import { SVGRenderer } from 'echarts/renderers'
-import { textColor } from '~/const'
-import type { GameDataWithValues, GamesDataWithValues } from '~/types'
+import type {
+  GameDataWithValues,
+  GamesDataWithValues,
+  PlatformOptions
+} from '~/types'
 
 type Option = ComposeOption<
   | GridComponentOption
@@ -63,9 +73,7 @@ type Option = ComposeOption<
 >
 
 type PriceProperty = 'priceMin' | 'priceAvg' | 'priceMax'
-type PlatformProperty = 'Steam' | 'Xbox' | 'PlayStation'
 type SourceItem = Record<string, number | string>
-// type DatasetSource = Array<SourceItem>
 type PriceOptions = Array<{ label: string; value: PriceProperty }>
 
 use([
@@ -77,37 +85,49 @@ use([
   SVGRenderer
 ])
 
-const { isDesktop, isMobile } = useScreen()
+const { isDesktop } = useScreen()
 const gamesData = useState<GamesDataWithValues>('gamesData')
 
-const platformOptions: Array<PlatformProperty> = [
-  'Steam',
-  'Xbox',
-  'PlayStation'
+const platformOptions: PlatformOptions = [
+  { label: 'Все', value: 'all' },
+  { label: 'Steam', value: 'Steam' },
+  { label: 'Xbox', value: 'Xbox' },
+  { label: 'PlayStation', value: 'PlayStation' }
 ]
+
 const priceOptions: PriceOptions = [
   { label: 'Минимальная', value: 'priceMin' },
   { label: 'Средняя', value: 'priceAvg' },
   { label: 'Максимальная', value: 'priceMax' }
 ]
 
-const selectedPlatform = ref<PlatformProperty>('Steam')
-const selectedPrice = ref<PriceOptions[0]>(priceOptions[0])
+const selectedPlatform = ref<PlatformOptions[number]>(platformOptions[0])
+const selectedPrice = ref<PriceOptions[number]>(priceOptions[0])
 
 const dataset = computed<DatasetComponentOption>(() => {
   if (!gamesData.value) {
     return {}
   }
-  return getDataset(selectedPrice.value, selectedPlatform.value)
+  return getDataset(selectedPrice.value, selectedPlatform.value.value)
+})
+
+const series = computed<Option['series']>(() => {
+  const editionsCount = (dataset.value.dimensions?.length ?? 1) - 1
+  return Array(editionsCount).fill({
+    type: 'bar',
+    itemStyle: {
+      borderRadius: [6, 6, 0, 0]
+    }
+  })
 })
 
 const getEditions = (): Array<GameDataWithValues['edition']> => {
-  return gamesData.value.map(({ edition }) => edition)
+  return uniq(gamesData.value.map(({ edition }) => edition))
 }
 
 const getDimensions = (): DatasetComponentOption['dimensions'] => {
   const editions = getEditions()
-  return ['game', ...uniq(editions)]
+  return ['game', ...editions]
 }
 
 const createNewSourceItem = (
@@ -125,13 +145,13 @@ const createNewSourceItem = (
 }
 
 const getDataset = (
-  { value: price }: PriceOptions[0],
-  platfrom: PlatformProperty
+  { value: price }: PriceOptions[number],
+  platfrom: PlatformOptions[number]['value']
 ): DatasetComponentOption => {
   const dimensions = getDimensions()
   const unsortedSource = gamesData.value?.reduce(
     (acc: Array<SourceItem>, gameData) => {
-      if (gameData.platform !== platfrom) {
+      if (gameData.platform !== platfrom && platfrom !== 'all') {
         return acc
       }
       const index = acc?.findIndex(({ game }) => game === gameData.name)
@@ -155,21 +175,36 @@ const getDataset = (
   return { source, dimensions }
 }
 
-const options = computed<Option>(() => ({
+const option = computed<Option>(() => ({
   legend: {
     left: 'left',
     itemWidth: 14,
     itemheight: 18,
     itemGap: 20,
     textStyle: {
-      color: textColor
+      color: '#fff'
     }
   },
-  tooltip: {},
+  tooltip: {
+    borderWidth: 0,
+    backgroundColor: getCssVar('dark') as string,
+    valueFormatter: (value) => (Number(value) ? `${value} руб.` : '-'),
+    textStyle: {
+      color: getCssVar('primary') as string
+    },
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow',
+      shadowStyle: {
+        opacity: 0.1
+      }
+    }
+  },
   dataset: dataset.value,
   grid: {
     left: isDesktop.value ? '8%' : 0,
-    right: 0
+    right: 0,
+    height: isDesktop.value ? '74%' : '54%'
   },
   xAxis: {
     type: 'category',
@@ -184,7 +219,7 @@ const options = computed<Option>(() => ({
     },
     axisLabel: {
       rotate: isDesktop.value ? 0 : 90,
-      width: isMobile.value ? 50 : 120,
+      width: isDesktop.value ? 120 : 50,
       margin: 0,
       overflow: 'truncate',
       ellipsis: '...',
@@ -203,12 +238,7 @@ const options = computed<Option>(() => ({
       color: getCssVar('secondary') as string
     }
   },
-  series: Array((dataset.value.dimensions?.length ?? 1) - 1).fill({
-    type: 'bar',
-    itemStyle: {
-      borderRadius: [6, 6, 0, 0]
-    }
-  }),
+  series: series.value,
   backgroundColor: getCssVar('dark-page') as string,
   textStyle: {
     fontFamily: 'Nunito'

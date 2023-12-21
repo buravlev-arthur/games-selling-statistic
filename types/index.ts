@@ -11,8 +11,9 @@ import type {
   Publishers
 } from './database.js'
 
-export type * from './server.ts'
-export type * from './database.js'
+export type * from './server'
+export type * from './database'
+export type * from './components'
 
 export interface DatabaseEntries {
   games: Games | null

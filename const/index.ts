@@ -9,5 +9,3 @@ export const periods: Periods = {
 }
 
 export const defaultPeriod: keyof Periods = 'week'
-
-export const textColor: string = '#fff'

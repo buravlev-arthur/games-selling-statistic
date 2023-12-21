@@ -9,7 +9,7 @@
         <EditionsChart />
       </div>
       <div class="col-12 col-md-4" :style="chartContainerStyles">
-        <PricesChart />
+        <OffersChart />
       </div>
     </div>
   </div>

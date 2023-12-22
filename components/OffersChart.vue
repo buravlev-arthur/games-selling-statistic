@@ -44,7 +44,7 @@ type Option = ComposeOption<
 type SeriesDataAccumulator = Array<{ name: string; value: number }>
 
 const { isDesktop } = useScreen()
-const gamesData = useState<GamesDataWithValues>('gamesData')
+const allGames = useState<GamesDataWithValues>('gamesData')
 
 const platformOptions: PlatformOptions = [
   { label: 'Все', value: 'all' },
@@ -56,6 +56,10 @@ const platformOptions: PlatformOptions = [
 use([PieChart, TooltipComponent, LegendComponent, SVGRenderer, LabelLayout])
 
 const selectedPlatform = ref<PlatformOptions[number]>(platformOptions[0])
+
+const gamesData = computed<GamesDataWithValues>(
+  () => allGames.value?.filter(({ active }) => active) ?? []
+)
 
 const seriesData = computed<PieSeriesOption['data']>(() => {
   const unsortedSeriesData = gamesData.value?.reduce(

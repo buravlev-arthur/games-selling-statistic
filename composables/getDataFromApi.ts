@@ -7,7 +7,8 @@ import type {
   Platforms,
   DatabaseEntries,
   PeriodProperty,
-  GamesDataWithValues
+  GamesDataWithValues,
+  SelectedGames
 } from '~/types'
 import { periods } from '~/const'
 
@@ -49,12 +50,14 @@ export const useGamesDataValues = (
   gamesData: GamesData | null
 ): Ref<GamesDataWithValues> => {
   const gamesDataWithValue = ref<GamesDataWithValues>([])
+  const selectedGames = useState<SelectedGames>('selectedGames')
   const { games, platforms, editions, publishers } =
     useState<DatabaseEntries>('databaseEntries').value
 
   if (gamesData?.length) {
     gamesDataWithValue.value = gamesData.map((game) => ({
       id: game.id,
+      active: selectedGames.value.includes(getNameItemById(game.name, games)),
       name: getNameItemById(game.name, games),
       edition: getNameItemById(game.edition, editions),
       platform: getNameItemById(game.platform, platforms),
@@ -81,10 +84,19 @@ export const useSetStates = async (period: PeriodProperty): Promise<void> => {
     databaseEntires.value = entries
   }
 
+  const selectedGames = useState<SelectedGames>('selectedGames')
+  if (!selectedGames.value) {
+    selectedGames.value =
+      databaseEntires.value.games?.map(({ name }) => name) ?? []
+  }
+
   const gamesDataByPeriod = await useGamesDataByPeriod(period)
   const gamesDataWithValues = useGamesDataValues(gamesDataByPeriod.value)
   const gamesData = useState<GamesDataWithValues>('gamesData')
   gamesData.value = gamesDataWithValues.value
+
+  const selectedPeriod = useState<string>('selectedPeriod')
+  selectedPeriod.value = period
 
   isStatesLoaded.value = true
 }

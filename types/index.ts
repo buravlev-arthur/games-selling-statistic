@@ -34,6 +34,7 @@ export type PeriodProperty = keyof Periods
 
 export interface GameDataWithValues {
   id: GameData['id']
+  active: boolean
   name: Game['name']
   edition: Edition['name']
   platform: Platform['name']
@@ -52,3 +53,5 @@ export interface UseScreenReturn {
   isMobile: Ref<boolean>
   isDesktop: Ref<boolean>
 }
+
+export type SelectedGames = Array<string>

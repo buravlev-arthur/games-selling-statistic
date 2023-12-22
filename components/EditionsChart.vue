@@ -86,7 +86,7 @@ use([
 ])
 
 const { isDesktop } = useScreen()
-const gamesData = useState<GamesDataWithValues>('gamesData')
+const allGames = useState<GamesDataWithValues>('gamesData')
 
 const platformOptions: PlatformOptions = [
   { label: 'Все', value: 'all' },
@@ -103,6 +103,10 @@ const priceOptions: PriceOptions = [
 
 const selectedPlatform = ref<PlatformOptions[number]>(platformOptions[0])
 const selectedPrice = ref<PriceOptions[number]>(priceOptions[0])
+
+const gamesData = computed<GamesDataWithValues>(
+  () => allGames.value?.filter(({ active }) => active) ?? []
+)
 
 const dataset = computed<DatasetComponentOption>(() => {
   if (!gamesData.value) {
@@ -220,6 +224,7 @@ const option = computed<Option>(() => ({
     axisLabel: {
       rotate: isDesktop.value ? 0 : 90,
       width: isDesktop.value ? 120 : 50,
+      interval: 0,
       margin: 0,
       overflow: 'truncate',
       ellipsis: '...',

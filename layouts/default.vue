@@ -1,12 +1,13 @@
 <template>
   <QLayout view="hhh lpr fff">
-    <QHeader class="bg-dark q-pa-sm">
+    <QHeader class="row items-center bg-dark q-px-md justify-between">
       <QImg
         src="/logo.svg"
         width="140px"
         height="60px"
         spinner-color="accent"
       />
+      <SettingsMenu />
     </QHeader>
 
     <QPageContainer>

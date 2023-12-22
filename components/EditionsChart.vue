@@ -191,6 +191,7 @@ const option = computed<Option>(() => ({
   },
   tooltip: {
     borderWidth: 0,
+    confine: true,
     backgroundColor: getCssVar('dark') as string,
     valueFormatter: (value) => (Number(value) ? `${value} руб.` : '-'),
     textStyle: {

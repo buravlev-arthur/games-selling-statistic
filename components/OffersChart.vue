@@ -83,6 +83,7 @@ const seriesData = computed<PieSeriesOption['data']>(() => {
 const option = computed<Option>(() => ({
   tooltip: {
     borderWidth: 0,
+    confine: true,
     backgroundColor: getCssVar('dark') as string,
     textStyle: {
       color: getCssVar('primary') as string
@@ -114,6 +115,7 @@ const option = computed<Option>(() => ({
       name: 'Количество предложений',
       type: 'pie',
       right: 120,
+      left: isDesktop.value ? 0 : 10,
       radius: ['70%', isDesktop.value ? '96%' : '100%'],
       avoidLabelOverlap: false,
       itemStyle: {

@@ -15,7 +15,16 @@
         <div class="row">
           <QBtnGroup class="row col-12 light-item" flat>
             <QBtn
-              label="Мecяц"
+              label="Год"
+              :unelevated="false"
+              no-caps
+              class="col-4"
+              :class="selectedPeriod === 'year' ? 'q-btn--selected' : ''"
+              :disable="!isStatesLoaded"
+              @click="setPeriod('year')"
+            />
+            <QBtn
+              label="Месяц"
               :unelevated="false"
               no-caps
               class="col-4"
@@ -31,15 +40,6 @@
               :class="selectedPeriod === 'week' ? 'q-btn--selected' : ''"
               :disable="!isStatesLoaded"
               @click="setPeriod('week')"
-            />
-            <QBtn
-              label="Сегодня"
-              :unelevated="false"
-              no-caps
-              class="col-4"
-              :class="selectedPeriod === 'day' ? 'q-btn--selected' : ''"
-              :disable="!isStatesLoaded"
-              @click="setPeriod('day')"
             />
           </QBtnGroup>
         </div>

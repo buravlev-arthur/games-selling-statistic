@@ -1,25 +1,27 @@
 <template>
-  <div class="column" style="height: 100%">
-    <div
-      class="col-3 row q-col-gutter-md items-center"
-      :class="isDesktop ? 'justify-end' : ''"
-    >
-      <h6>Количество предложений</h6>
-      <QSelect
-        v-model="selectedPlatform"
-        class="col-12 col-md-4"
-        rounded
-        dense
-        standout
-        :options="platformOptions"
-        options-selected-class="active-select-option"
-        label="Платформа"
-      />
+  <ClientOnly>
+    <div class="column" style="height: 100%">
+      <div
+        class="row col-3 col-md-2 items-center"
+        :class="isDesktop ? 'justify-end' : ''"
+      >
+        <h6 class="q-mr-md">Количество предложений</h6>
+        <QSelect
+          v-model="selectedPlatform"
+          class="col-12 col-md-4"
+          rounded
+          dense
+          standout
+          :options="platformOptions"
+          options-selected-class="active-select-option"
+          label="Платформа"
+        />
+      </div>
+      <div class="col-9 col-md-10">
+        <VChart :option="option" autoresize />
+      </div>
     </div>
-    <div class="col-9">
-      <VChart :option="option" autoresize />
-    </div>
-  </div>
+  </ClientOnly>
 </template>
 
 <script lang="ts" setup>
@@ -98,7 +100,7 @@ const option = computed<Option>(() => ({
   },
   legend: {
     orient: 'vertical',
-    top: isDesktop.value ? 0 : 30,
+    top: 30,
     left: 'right',
     itemWidth: 14,
     itemheight: 18,

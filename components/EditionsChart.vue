@@ -5,8 +5,11 @@
         <div class="col-12 col-md-6">
           <h6>Стоимость изданий</h6>
         </div>
-        <div class="row col-12 col-md-6 q-col-gutter-sm">
-          <div class="col-12 col-md-6">
+        <div
+          class="row col-12 col-md-6"
+          :class="isDesktop ? 'justify-end' : ''"
+        >
+          <div class="col-12 col-md-5 q-mb-sm q-mr-md">
             <QSelect
               v-model="selectedPlatform"
               rounded
@@ -224,7 +227,7 @@ const option = computed<Option>(() => ({
     },
     axisLabel: {
       rotate: isDesktop.value ? 0 : 90,
-      width: isDesktop.value ? 120 : 50,
+      width: isDesktop.value ? 120 : 70,
       interval: 0,
       margin: 0,
       overflow: 'truncate',

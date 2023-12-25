@@ -1,6 +1,14 @@
 <template>
   <div class="column">
-    <div class="row q-col-gutter-lg charts-block">
+    <div class="row">
+      <div class="col-12 col-md-4" :style="chartContainerStyles">
+        <p>Block #1</p>
+      </div>
+      <div class="col-12 col-md-8" :style="chartContainerStyles">
+        <PricesChart />
+      </div>
+    </div>
+    <div class="row">
       <div class="col-12 col-md-8" :style="chartContainerStyles">
         <EditionsChart />
       </div>
@@ -20,11 +28,7 @@ const chartContainerStyles = computed<Record<string, string>>(() => ({
 </script>
 
 <style lang="scss">
-.buttons-block {
-  height: 100px;
-}
-
-.charts-block {
+.q-page > .column > .row {
   height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {

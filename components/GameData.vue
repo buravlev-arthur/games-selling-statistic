@@ -22,7 +22,9 @@
           :name="gameListItemData.priceIcon"
           :color="gameListItemData.priceIconColor"
         />
-        <div class="text-primary">{{ gameListItemData.price ?? 0 }} руб.</div>
+        <div class="text-primary">
+          {{ new Intl.NumberFormat().format(gameListItemData.price) ?? 0 }} руб.
+        </div>
       </div>
     </QCardSection>
     <QCardSection class="column col-4 col-md-3">

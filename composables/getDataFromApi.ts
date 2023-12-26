@@ -55,20 +55,22 @@ export const useGamesDataValues = (
     useState<DatabaseEntries>('databaseEntries').value
 
   if (gamesData?.length) {
-    gamesDataWithValue.value = gamesData.map((game) => ({
-      id: game.id,
-      active: selectedGames.value.includes(getNameItemById(game.name, games)),
-      name: getNameItemById(game.name, games),
-      edition: getNameItemById(game.edition, editions),
-      platform: getNameItemById(game.platform, platforms),
-      publisher: getPublisherByGameId(game.name, publishers, games),
-      priceMin: game.price_min,
-      priceAvg: game.price_avg,
-      priceMax: game.price_max,
-      offersCount: game.offers_count,
-      date: new Date(game.parsed_date),
-      dateLocalString: new Date(game.parsed_date).toLocaleDateString('ru')
-    }))
+    gamesDataWithValue.value = gamesData
+      .map((game) => ({
+        id: game.id,
+        active: selectedGames.value.includes(getNameItemById(game.name, games)),
+        name: getNameItemById(game.name, games),
+        edition: getNameItemById(game.edition, editions),
+        platform: getNameItemById(game.platform, platforms),
+        publisher: getPublisherByGameId(game.name, publishers, games),
+        priceMin: game.price_min,
+        priceAvg: game.price_avg,
+        priceMax: game.price_max,
+        offersCount: game.offers_count,
+        date: new Date(game.parsed_date),
+        dateLocalString: new Date(game.parsed_date).toLocaleDateString('ru')
+      }))
+      .sort((a, b) => (a.name > b.name ? 1 : -1))
   }
 
   return gamesDataWithValue

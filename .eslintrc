@@ -6,7 +6,7 @@
     "vue/singleline-html-element-content-newline": [
       "error",
       {
-        "ignores": ["h6"]
+        "ignores": ["h6", "div"]
       }
     ]
   }

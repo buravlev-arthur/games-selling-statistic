@@ -120,9 +120,11 @@ const setPeriod = async (period: PeriodProperty): Promise<void> => {
 }
 
 const setGames = (selectedGames: Array<string>): void => {
-  gamesData.value = gamesData.value.map((game) => ({
-    ...game,
-    active: selectedGames.includes(game.name)
-  }))
+  gamesData.value = gamesData.value
+    .map((game) => ({
+      ...game,
+      active: selectedGames.includes(game.name)
+    }))
+    .sort((a, b) => (a.name > b.name ? 1 : -1))
 }
 </script>

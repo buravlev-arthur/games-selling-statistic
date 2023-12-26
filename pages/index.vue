@@ -1,14 +1,14 @@
 <template>
   <div class="column">
-    <div class="row">
-      <div class="col-12 col-md-4" :style="chartContainerStyles">
-        <p>Block #1</p>
+    <div class="top-container row">
+      <div class="column col-12 col-md-4" :style="chartContainerStyles">
+        <GamesData />
       </div>
       <div class="col-12 col-md-8" :style="chartContainerStyles">
         <PricesChart />
       </div>
     </div>
-    <div class="row">
+    <div class="bottom-container row">
       <div class="col-12 col-md-8" :style="chartContainerStyles">
         <EditionsChart />
       </div>
@@ -28,7 +28,15 @@ const chartContainerStyles = computed<Record<string, string>>(() => ({
 </script>
 
 <style lang="scss">
-.q-page > .column > .row {
+.top-container {
+  height: 400px;
+
+  @media (max-width: $breakpoint-sm-max) {
+    height: 1040px;
+  }
+}
+
+.bottom-container {
   height: 400px;
 
   @media (max-width: $breakpoint-sm-max) {

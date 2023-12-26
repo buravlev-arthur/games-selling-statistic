@@ -2,8 +2,8 @@
   <ClientOnly>
     <div class="column" style="height: 100%">
       <div class="col-4 col-md-2 row justify-between items-center">
-        <div class="col-12 col-md-6">
-          <h6>Динамика стоимости</h6>
+        <div class="row col-12 col-md-6">
+          <h6 :class="isDesktop ? 'offset-1' : ''">Динамика стоимости</h6>
         </div>
         <div
           class="row col-12 col-md-6"
@@ -128,9 +128,8 @@ const getSeriesData = (gameName: string): Array<number> =>
     if (game.name !== gameName || index === -1 || isNotSelectedPlatform) {
       return acc
     }
-    acc[index] = Math.round(
-      ((acc[index] ?? 0) + game[selectedPrice.value.value]) / 2
-    )
+    const price = game[selectedPrice.value.value] ?? 0
+    acc[index] = Math.round(((acc[index] ?? price) + price) / 2)
     return acc
   }, []) ?? []
 
@@ -176,8 +175,8 @@ const option = computed<Option>(() => ({
     }
   },
   grid: {
-    left: isDesktop.value ? '6%' : '3%',
-    right: '3%',
+    left: isDesktop.value ? '10%' : '3%',
+    right: isDesktop.value ? '1%' : '3%',
     height: isDesktop.value ? '70%' : '54%'
   },
   xAxis: {
@@ -193,9 +192,10 @@ const option = computed<Option>(() => ({
       }
     },
     axisLabel: {
+      align: 'right',
       rotate: isDesktop.value ? 0 : 90,
       width: isDesktop.value ? 120 : 70,
-      fontSize: 12,
+      fontSize: 10,
       margin: 14,
       overflow: 'truncate',
       ellipsis: '...',

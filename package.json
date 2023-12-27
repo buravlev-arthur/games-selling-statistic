@@ -27,6 +27,7 @@
     "test": "vitest --run",
     "generate": "nuxt generate",
     "lint": "eslint .",
+    "stylelint": "bunx stylelint \"**/*.{scss,css,vue}\"",
     "format": "prettier -c .",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

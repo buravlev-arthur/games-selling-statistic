@@ -7,10 +7,13 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      chatset: 'utf-8',
       title: 'GameStats - статистика продаж компьютерных игр в России',
       link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
       meta: [
+        {
+          name: 'charset',
+          content: 'utf-8'
+        },
         {
           name: 'description',
           content:

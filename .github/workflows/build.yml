@@ -34,6 +34,9 @@ jobs:
       - name: Linting
         run: bun run lint
 
+      - name: Stylelinting
+        run: bun run stylelint
+
       - name: Checking code formating
         run: bun run format
 

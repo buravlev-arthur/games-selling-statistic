@@ -6,6 +6,9 @@
 >
 > Демонстрация: <http://188.225.84.218:82>
 
+![example branch parameter](https://github.com/buravlev-arthur/games-selling-statistic/actions/workflows/build.yml/badge.svg?branch=main)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d533018672e3b0d8cdb9/maintainability)](https://codeclimate.com/github/buravlev-arthur/games-selling-statistic/maintainability)
+
 ## Стек технологий
 
 **Код**: Nuxt 3, Quasar module, TypeScript, SCSS
@@ -33,6 +36,11 @@ bun run dev
 
 # тестирование
 bun run test
+
+# проверка кода
+bun run lint
+bun run stylelint
+bun run format
 
 # сборка проекта
 bun run build

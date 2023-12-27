@@ -7,8 +7,21 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'GameStats - стастика продаж компьютерных игр в России',
-      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }]
+      chatset: 'utf-8',
+      title: 'GameStats - статистика продаж компьютерных игр в России',
+      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Статистика продаж компьютерных игр в российских маркетплейсах для Steam, Xbox и PlayStation. Димамика стоимости игр и количества товаров на рынке.'
+        },
+        {
+          name: 'keywords',
+          content:
+            'статистика, продажы, игры, графики, цены, товары, динамика, изменение, стоимость, компьютерные игры, steam, xbox, playstation'
+        }
+      ]
     }
   },
 
@@ -21,7 +34,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { ssr: false }
+    '/': { swr: 86400 }
   },
 
   modules: [

@@ -77,7 +77,7 @@ const iconSrc = ref<string>(
 
     .game-name {
       @media (max-width: $breakpoint-sm-max) {
-        width: 110px;
+        width: 98px;
         overflow: hidden;
         text-overflow: ellipsis;
       }

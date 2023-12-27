@@ -19,66 +19,26 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "~": [
-        ".."
-      ],
-      "~/*": [
-        "../*"
-      ],
-      "@": [
-        ".."
-      ],
-      "@/*": [
-        "../*"
-      ],
-      "~~": [
-        ".."
-      ],
-      "~~/*": [
-        "../*"
-      ],
-      "@@": [
-        ".."
-      ],
-      "@@/*": [
-        "../*"
-      ],
-      "assets": [
-        "../assets"
-      ],
-      "assets/*": [
-        "../assets/*"
-      ],
-      "public": [
-        "../public"
-      ],
-      "public/*": [
-        "../public/*"
-      ],
-      "#app": [
-        "../node_modules/nuxt/dist/app"
-      ],
-      "#app/*": [
-        "../node_modules/nuxt/dist/app/*"
-      ],
-      "vue-demi": [
-        "../node_modules/nuxt/dist/app/compat/vue-demi"
-      ],
-      "#vue-router": [
-        "./vue-router-stub"
-      ],
-      "#imports": [
-        "./imports"
-      ],
-      "#build": [
-        "."
-      ],
-      "#build/*": [
-        "./*"
-      ],
-      "#components": [
-        "./components"
-      ]
+      "~": [".."],
+      "~/*": ["../*"],
+      "@": [".."],
+      "@/*": ["../*"],
+      "~~": [".."],
+      "~~/*": ["../*"],
+      "@@": [".."],
+      "@@/*": ["../*"],
+      "assets": ["../assets"],
+      "assets/*": ["../assets/*"],
+      "public": ["../public"],
+      "public/*": ["../public/*"],
+      "#app": ["../node_modules/nuxt/dist/app"],
+      "#app/*": ["../node_modules/nuxt/dist/app/*"],
+      "vue-demi": ["../node_modules/nuxt/dist/app/compat/vue-demi"],
+      "#vue-router": ["./vue-router-stub"],
+      "#imports": ["./imports"],
+      "#build": ["."],
+      "#build/*": ["./*"],
+      "#components": ["./components"]
     },
     "emitDeclarationOnly": false,
     "incremental": true,

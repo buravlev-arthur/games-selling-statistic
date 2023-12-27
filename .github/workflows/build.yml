@@ -1,0 +1,44 @@
+name: build
+on: push
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Cloning the repository
+        uses: actions/checkout@v2
+
+      - name: Setting env vars
+        run: |
+          echo "NUXT_DB_HOST=${{ secrets.NUXT_DB_HOST }}" >> "$GITHUB_ENV"
+          echo "NUXT_DB_USER=${{ secrets.NUXT_DB_USER }}" >> "$GITHUB_ENV"
+          echo "NUXT_DB_PASSWORD=${{ secrets.NUXT_DB_PASSWORD }}" >> "$GITHUB_ENV"
+          echo "NUXT_DB_PORT=${{ secrets.NUXT_DB_PORT }}" >> "$GITHUB_ENV"
+          echo "NUXT_DB_NAME=${{ secrets.NUXT_DB_NAME }}" >> "$GITHUB_ENV"
+
+      - name: Installing node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Installing bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 'latest'
+
+      - name: Installing project dependencies
+        run: bun install
+
+      - name: Linting
+        run: bun run lint
+
+      - name: Checking code formating
+        run: bun run format
+
+      - name: Testing
+        run: bun run test
+
+      - name: Building
+        run: bun run build

@@ -24,7 +24,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "test": "vitest",
+    "test": "vitest --run",
     "generate": "nuxt generate",
     "lint": "eslint .",
     "format": "prettier -c .",

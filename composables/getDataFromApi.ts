@@ -23,7 +23,7 @@ export const useGamesDataByPeriod = async (
     availableDates.value?.max as string
   ).toLocaleDateString('en')
   const from = new Date(
-    new Date().setDate(new Date(until).getDate() - daysBefore)
+    new Date(until).setDate(new Date(until).getDate() - daysBefore)
   ).toLocaleDateString('en')
   const url = `/api/gamesdata/dateinterval?from=${from}&until=${until}`
   const { data } = await useFetch<GamesData>(url)
